@@ -102,6 +102,18 @@ void dputs(const char *s) {
     }
 }
 
+int printk(const char *fmt, ...) {
+    int result;
+    va_list ap;
+    va_start(ap, fmt);
+    static char buf[1024];
+    memset(buf, 'X', sizeof(buf));
+    result = vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+    dputs(buf);
+    return result;
+}
+
 void setcursor(int x, int y) {
     int loc;
     unsigned char byte;

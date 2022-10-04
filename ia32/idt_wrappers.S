@@ -169,7 +169,7 @@ call home
 push $0x0C
 call setattr
 pop %eax
-call mprintf
+call printk
 pop %eax
 pop %eax
 pop %eax
@@ -205,7 +205,7 @@ call home
 push $0x0C
 call setattr
 pop %eax
-call mprintf
+call printk
 pop %eax
 pop %eax
 pop %eax

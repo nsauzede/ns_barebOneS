@@ -44,5 +44,6 @@ void console_init();
 void cls();
 int dputchar(int c);
 void dputs(const char *s);
+int printk(const char *fmt, ...) asm ("printk");
 
 #endif/*VID_H__*/

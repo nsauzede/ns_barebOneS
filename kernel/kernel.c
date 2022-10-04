@@ -59,7 +59,7 @@ static void timer_handler(int id, void *ptr) {
     irq_regs_t *regs = (irq_regs_t *)(ptr - sizeof(irq_regs_t));
     irq_ctx_t *ctx = (irq_ctx_t *)ptr;
     gotoxy(0, 0);
-    printf("id=%d ptr=%p eax=%08x eip=%p efl=%04x kbhits=%d jiffies=%d \n", id, ptr, regs->eax, ctx->eip, ctx->eflags, kbhits, jiffies);
+    printk("id=%d ptr=%p eax=%08x eip=%p efl=%04x kbhits=%d jiffies=%d \n", id, ptr, regs->eax, ctx->eip, ctx->eflags, kbhits, jiffies);
     jiffies++;
 }
 
@@ -69,7 +69,7 @@ void schedule() {
         static int count = 0;
         for (int i = 0; i < jiffies*1+10; i++) {
         gotoxy(0, 1);
-        printf("hi jiffies=%d count=%d\n", jiffies, count++);
+        printk("hi jiffies=%d count=%d\n", jiffies, count++);
             asm volatile("hlt");
         }
         halt();
@@ -88,8 +88,8 @@ void kernel_main(void) {
     irq_set_handler(IRQ_KB, kb_handler);
     i8254_set_freq(1);
 #if 1
-    printf("\n\n\n");
-    printf("Hello Kernel%s!\n", sizeof(void *) == 8 ? "64" : "32");
+    printk("\n\n\n");
+    printk("Hello Kernel%s!\n", sizeof(void *) == 8 ? "64" : "32");
     uint16_t cs, ds;
     asm volatile(
         "mov %%cs,%%ax\n"
@@ -105,12 +105,12 @@ void kernel_main(void) {
         :
         : "ax"
     );
-    printf("cs=%" PRIx16 " ds=%" PRIx16 "\n", cs, ds);
+    printk("cs=%" PRIx16 " ds=%" PRIx16 "\n", cs, ds);
     extern char stack_bottom[0], stack_top[0];
-    printf("stack_bottom=%p stack_top=%p\n", stack_bottom, stack_top);
-    printf("\n\n");
+    printk("stack_bottom=%p stack_top=%p\n", stack_bottom, stack_top);
+    printk("\n\n");
 #endif
-//    printf("%01x\n", 0xa);
+//    printk("%01x\n", 0xa);
     dump_gdt();
 
     schedule();

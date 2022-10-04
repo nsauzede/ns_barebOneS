@@ -1,8 +1,5 @@
-#include <stdarg.h>
-
-#define NOALIAS
+#define NO_ALIAS
 #include "libc.h"
-#include "vid.h"        // dputchar, ...
 
 void *mmemset(void *_s, int c, size_t n) {
     if (_s) {
@@ -51,6 +48,7 @@ enum {
     FLAG_PLUS = 1 << 4,
     FLAG_UPPER = 1 << 5,
 };
+
 // size: max number of bytes to write to str
 // width: desired number of bytes written
 static int number(char *str, size_t size, unsigned long num, int base, int width, int flags) {
@@ -145,11 +143,11 @@ int mvsnprintf(char *str, size_t size, const char *format, va_list ap) {
                         break;
                     case 's': {
                         ptr = va_arg(ap, typeof(ptr));
-                        int len = strlen(ptr);
+                        int len = mstrlen(ptr);
                         if (written + len > size) {
                             len = size - written;
                         }
-                        memcpy(str + written, ptr, len);
+                        mmemcpy(str + written, ptr, len);
                         written += len;
                         break;
                     }
@@ -169,16 +167,4 @@ int mvsnprintf(char *str, size_t size, const char *format, va_list ap) {
         str[written] = 0;
     }
     return written;
-}
-
-int mprintf(const char *fmt, ...) {
-    int result;
-    va_list ap;
-    va_start(ap, fmt);
-    static char buf[1024];
-    memset(buf, 'X', sizeof(buf));
-    result = vsnprintf(buf, sizeof(buf), fmt, ap);
-    va_end(ap);
-    dputs(buf);
-    return result;
 }

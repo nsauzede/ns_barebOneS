@@ -107,7 +107,7 @@ pop %rdx
 pop %rcx
 pop %r8
 pop %r9
-call mprintf
+call printk
 1:
 hlt
 jmp 1b
